@@ -1,31 +1,36 @@
-const body = document.body;
-const startEl = body.querySelector('[data-start]');
-const stopEl = body.querySelector('[data-stop]');
+const startEl = document.querySelector('[data-start]');
+const stopEl = document.querySelector('[data-stop]');
 
-let timerId = null;
+stopEl.disabled = true; // Кнопка стоп неактивна за замовчуванням
 
-stopEl.disabled = 'disabled';
+let intervalId = null; // Змінна для збереження ідентифікатора інтервалу
 
-const onButtonClick = ({ target: { dataset } }) => {
-  const isActionProperty =
-    dataset.hasOwnProperty('start') || dataset.hasOwnProperty('stop');
-  isActionProperty ? onActionControl(Object.keys(dataset)) : undefined;
-};
+/**
+ * Функція починає чи припиняє змінювати колір фону <body> в залежності від data атрибуту кнопки
+ * @param {{ currentTarget: { dataset } }} Деструктуризація об'єкту події 'click' для отримання data атрибуту
+ */
+const onBtnClick = ({ currentTarget: { dataset } }) => {
+  const dataSetAttribute = Object.keys(dataset); // Отримання масиву з назвою data атрибуту натиснутої кнопки
 
-const onActionControl = dataset => {
-  if (dataset[0] === 'start') {
-    stopEl.removeAttribute('disabled');
-    startEl.disabled = 'disabled';
-    timerId = setInterval(() => {body.style.backgroundColor = getRandomHexColor();}, 1000);
+  // Визначення натиснутої кнопки і виконання відповідних дій
+  if (dataSetAttribute[0] === 'start') {
+    stopEl.removeAttribute('disabled'); // Робить кнопку стоп активною
+    startEl.disabled = true; // Робить кнопку старт неактивною
+
+    intervalId = setInterval(() => {
+      document.body.style.backgroundColor = getRandomHexColor(); // Змінює колір фону <body> раз на секунду
+    }, 1000);
   } else {
-    stopEl.disabled = 'disabled';
-    startEl.removeAttribute('disabled');
-    clearInterval(timerId);
+    stopEl.disabled = true; // Робить кнопку стоп неактивною
+    startEl.removeAttribute('disabled'); // Робить кнопку старт активною
+    clearInterval(intervalId); // Видаляє інтервал
   }
 };
+
+
+startEl.addEventListener('click', onBtnClick);
+stopEl.addEventListener('click', onBtnClick);
 
 function getRandomHexColor() {
   return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 }
-
-body.addEventListener('click', onButtonClick);
