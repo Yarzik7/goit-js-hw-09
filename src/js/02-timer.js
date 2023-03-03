@@ -8,48 +8,60 @@ const options = {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    if (selectedDates[0].getTime() < new Date().getTime()) {
-      startBtnEl.disabled = 'disabled';
-      Notify.failure('Please choose a date in the future');
+    // Перевіряє чи вибрана дата вже минула
+    if (selectedDates[0] < new Date()) {
+      startBtnEl.disabled = true; // Залишає кнопку старт неактивною
+      Notify.failure('Please choose a date in the future'); // Вимагає вибрати дату в майбутньому
       return;
     }
-    startBtnEl.disabled = '';
-    selectedDate = selectedDates[0].getTime();
+    startBtnEl.disabled = false; // Робити кнопку старт активною
+    selectedDate = selectedDates[0]; // Зберігає обрану дату
   },
 };
 
-const selector = document.querySelector('#datetime-picker');
+const selectorEl = document.querySelector('#datetime-picker');
 const startBtnEl = document.querySelector('[data-start]');
 
 const [daysEl, hoursEl, minutesEl, secondsEl] =
-  document.querySelectorAll('.value');
+  document.querySelectorAll('.value'); // Деструктуризація масиву елементів з класом '.value'
 
-let selectedDate = '';
-let timerId = null;
+let selectedDate; // Змінна для зберігання вибраної дати
+let intervalId = null; // Змінна для збереження ідентифікатора інтервалу
 
-startBtnEl.disabled = 'disabled';
+startBtnEl.disabled = true; // Кнопка старт неактивна за замовчуванням
 
-flatpickr(selector, options);
+flatpickr(selectorEl, options); // Ініціалізація flatpickr
 
+/**
+ * Функція додає 0 перед числом якщо в ньому менше 2 символів
+ * @param {value} Значення частини таймеру
+ * @returns {string}
+ */
 const addLeadingZero = value => value.toString().padStart(2, 0);
 
+/**
+ * Функція оновлює значення таймеру на сторінці
+ */
 const onStartTimer = () => {
-  const date = new Date().getTime();
-  const dateDifference = selectedDate - date;
-  const { days, hours, minutes, seconds } = convertMs(dateDifference);
+  const date = new Date(); // Отримує поточну дату
+  const dateDifference = selectedDate - date; // Отримує різницю між вибраною і поточною датою
+  const { days, hours, minutes, seconds } = convertMs(dateDifference); // Деструктуризація об'єкту з відформатованою датою
 
-  secondsEl.textContent = addLeadingZero(seconds);
+  secondsEl.textContent = addLeadingZero(seconds); // Встановлення нового значення секунд
   minutesEl.textContent = addLeadingZero(minutes);
   hoursEl.textContent = addLeadingZero(hours);
   daysEl.textContent = addLeadingZero(days);
 
+  // Перевіряє чи скінчився відлік таймеру
   if (!(days || hours || minutes || seconds)) {
-    clearInterval(timerId);
-    return;
+    clearInterval(intervalId); // Видаляє інтервал по ідентифікатору
   }
 };
 
-const onStartClick = () => (timerId = setInterval(onStartTimer, 1000));
+/**
+ * Викликає функцію для оновлення таймеру на сторінці раз на секунду
+ */
+const onStartClick = () => intervalId = setInterval(onStartTimer, 1000);
 
 startBtnEl.addEventListener('click', onStartClick);
 
