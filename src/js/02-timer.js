@@ -21,14 +21,19 @@ const options = {
 
 const selectorEl = document.querySelector('#datetime-picker');
 const startBtnEl = document.querySelector('[data-start]');
+const timerEl = document.querySelector('.timer');
+const spanValueEl = document.querySelectorAll('.value');
 
-const [daysEl, hoursEl, minutesEl, secondsEl] =
-  document.querySelectorAll('.value'); // Деструктуризація масиву елементів з класом '.value'
+const [daysEl, hoursEl, minutesEl, secondsEl] = spanValueEl; // Деструктуризація масиву елементів з класом '.value'
 
 let selectedDate; // Змінна для зберігання вибраної дати
 let intervalId = null; // Змінна для збереження ідентифікатора інтервалу
 
 startBtnEl.disabled = true; // Кнопка старт неактивна за замовчуванням
+
+// Мінімальне оформлення таймера
+timerEl.style.cssText = `display: flex; gap: 10px; text-align: center; text-transform: uppercase;`;
+spanValueEl.forEach(item => item.style.cssText = `display: block; font-size: 40px;`);
 
 flatpickr(selectorEl, options); // Ініціалізація flatpickr
 
