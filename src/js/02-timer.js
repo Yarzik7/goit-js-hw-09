@@ -47,7 +47,7 @@ const addLeadingZero = value => value.toString().padStart(2, 0);
 /**
  * Функція оновлює значення таймеру на сторінці
  */
-const onStartTimer = () => {
+const onUpdateTimer = () => {
   const date = new Date(); // Отримує поточну дату
   const dateDifference = selectedDate - date; // Отримує різницю між вибраною і поточною датою
   const { days, hours, minutes, seconds } = convertMs(dateDifference); // Деструктуризація об'єкту з відформатованою датою
@@ -66,7 +66,7 @@ const onStartTimer = () => {
 /**
  * Викликає функцію для оновлення таймеру на сторінці раз на секунду
  */
-const onStartClick = () => intervalId = setInterval(onStartTimer, 1000);
+const onStartClick = () => (intervalId = setInterval(onUpdateTimer, 1000));
 
 startBtnEl.addEventListener('click', onStartClick);
 
