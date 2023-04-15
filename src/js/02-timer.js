@@ -49,7 +49,7 @@ const addLeadingZero = value => value.toString().padStart(2, 0);
  */
 const onUpdateTimer = () => {
   const dateDifference = selectedDate - Date.now(); // Отримує різницю між вибраною і поточною датою
- 
+  
   //Перевіряє чи скінчився відлік таймеру
   if (dateDifference <= 0) {
     clearInterval(intervalId);
