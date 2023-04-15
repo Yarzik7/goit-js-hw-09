@@ -9,7 +9,7 @@ const options = {
   minuteIncrement: 1,
   onClose(selectedDates) {
     // Перевіряє чи вибрана дата вже минула
-    if (selectedDates[0] < new Date()) {
+    if (selectedDates[0] < Date.now()) {
       startBtnEl.disabled = true; // Залишає кнопку старт неактивною
       Notify.failure('Please choose a date in the future'); // Вимагає вибрати дату в майбутньому
       return;
@@ -48,9 +48,8 @@ const addLeadingZero = value => value.toString().padStart(2, 0);
  * Функція оновлює значення таймеру на сторінці
  */
 const onUpdateTimer = () => {
-  const date = new Date(); // Отримує поточну дату
-  const dateDifference = selectedDate - date; // Отримує різницю між вибраною і поточною датою
-  
+  const dateDifference = selectedDate - Date.now(); // Отримує різницю між вибраною і поточною датою
+ 
   //Перевіряє чи скінчився відлік таймеру
   if (dateDifference <= 0) {
     clearInterval(intervalId);
