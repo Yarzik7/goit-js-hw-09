@@ -50,23 +50,25 @@ const addLeadingZero = value => value.toString().padStart(2, 0);
 const onUpdateTimer = () => {
   const date = new Date(); // Отримує поточну дату
   const dateDifference = selectedDate - date; // Отримує різницю між вибраною і поточною датою
-  const { days, hours, minutes, seconds } = convertMs(dateDifference); // Деструктуризація об'єкту з відформатованою датою
+  
+  //Перевіряє чи скінчився відлік таймеру
+  if (dateDifference <= 0) {
+    clearInterval(intervalId);
+    return;
+  }
 
+  const { days, hours, minutes, seconds } = convertMs(dateDifference); // Деструктуризація об'єкту з відформатованою датою
+  
   secondsEl.textContent = addLeadingZero(seconds); // Встановлення нового значення секунд
   minutesEl.textContent = addLeadingZero(minutes);
   hoursEl.textContent = addLeadingZero(hours);
   daysEl.textContent = addLeadingZero(days);
-
-  // Перевіряє чи скінчився відлік таймеру
-  if (!(days || hours || minutes || seconds)) {
-    clearInterval(intervalId); // Видаляє інтервал по ідентифікатору
-  }
 };
 
 /**
  * Викликає функцію для оновлення таймеру на сторінці раз на секунду
  */
-const onStartClick = () => (intervalId = setInterval(onUpdateTimer, 1000));
+const onStartClick = () => {startBtnEl.disabled = true; intervalId = setInterval(onUpdateTimer, 1000) };
 
 startBtnEl.addEventListener('click', onStartClick);
 
